@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.repository.Repository;
 
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class ProductManagerTest {
@@ -17,6 +18,7 @@ public class ProductManagerTest {
     private Smartphone third = new Smartphone(3, "Phone1", 15000, "Brand1");
     private Smartphone fourth = new Smartphone(4, "Phone2", 20000, "Brand2");
     private Product fifth = new Product(5, "Apple", 40);
+    private Book sixth = new Book(6, "Book3", 500, "Author2");
 
     @BeforeEach
     public void setUp() {
@@ -25,12 +27,13 @@ public class ProductManagerTest {
         repository.save(third);
         repository.save(fourth);
         repository.save(fifth);
+        repository.save(sixth);
     }
 
     @Test
     public void GetAll() {
         Product[] actual = repository.findAll();
-        Product[] expected = new Product[]{first, second, third, fourth, fifth};
+        Product[] expected = new Product[]{first, second, third, fourth, fifth, sixth};
         assertArrayEquals(expected, actual);
     }
 
@@ -43,8 +46,8 @@ public class ProductManagerTest {
 
     @Test
     public void SearchByBooksAuthor() {
-        Product[] actual = manager.searchBy("Author2");
-        Product[] expected = new Product[]{second};
+        Product[] actual = manager.searchBy("Author1");
+        Product[] expected = new Product[]{first};
         assertArrayEquals(expected, actual);
     }
 
@@ -78,10 +81,10 @@ public class ProductManagerTest {
 
     @Test
     public void AddNewProduct() {
-        Product sixth = new Product(6, "Radio", 1000);
-        manager.add(sixth);
+        Product seventh = new Product(7, "Radio", 1000);
+        manager.add(seventh);
         Product[] actual = repository.findAll();
-        Product[] expected = new Product[]{first, second, third, fourth, fifth, sixth};
+        Product[] expected = new Product[]{first, second, third, fourth, fifth, sixth, seventh};
         assertArrayEquals(expected, actual);
     }
 
@@ -89,7 +92,23 @@ public class ProductManagerTest {
     public void RemoveById() {
         repository.removeById(5);
         Product[] actual = repository.findAll();
-        Product[] expected = new Product[]{first, second, third, fourth};
+        Product[] expected = new Product[]{first, second, third, fourth, sixth};
         assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void SearchByBooks() {
+        Product[] actual = manager.searchBy("Book1");
+        Product[] expected = new Product[]{first};
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void SearchSeveralProducts() {
+        String request = "Author2";
+        Product[] actual = manager.searchBy(request);
+        Product[] expected = {second, sixth};
+        assertArrayEquals(expected, actual);
+
     }
 }
